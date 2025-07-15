@@ -31,6 +31,7 @@ const validateCredentials = (req, res, next) => {
     next();
 };
 
+
 // Search products endpoint
 router.get('/search', validateCredentials, async (req, res) => {
     try {
@@ -42,7 +43,8 @@ router.get('/search', validateCredentials, async (req, res) => {
             productRegion = 'US',
             locale = 'en_US',
             pageNumber = 0,
-            pageSize = 24
+            pageSize = 24,
+            searchRefinements
         } = req.query;
 
         // Allow empty keywords for general product search
@@ -50,15 +52,29 @@ router.get('/search', validateCredentials, async (req, res) => {
 
         console.log(`Searching for products with keywords: "${searchKeywords}"`);
 
-        // Call the ProductSearchService
-        const searchResults = await ProductSearchService.searchProducts({
+        // Prepare search parameters
+        const searchParams = {
             keywords: searchKeywords,
             productRegion,
             locale,
             pageNumber: parseInt(pageNumber),
             pageSize: parseInt(pageSize),
             facets: ['IMAGES', 'OFFERS']
-        }, req.amazonHeaders);
+        };
+
+        // Add searchRefinements if provided
+        if (searchRefinements && searchRefinements.trim()) {
+            searchParams.searchRefinements = searchRefinements;
+            console.log(`✅ Including searchRefinements in API call: ${searchRefinements}`);
+            console.log(`📊 SearchRefinements parameter length: ${searchRefinements.length} characters`);
+        } else {
+            console.log(`ℹ️  No searchRefinements provided in request`);
+        }
+
+        console.log(`🔍 Final search parameters being sent to ProductSearchService:`, JSON.stringify(searchParams, null, 2));
+
+        // Call the ProductSearchService
+        const searchResults = await ProductSearchService.searchProducts(searchParams, req.amazonHeaders);
 
         console.log(`Search completed. Found ${searchResults.matchingProductCount} products`);
         console.log('Raw searchRefinements from API:', JSON.stringify(searchResults.searchRefinements, null, 2));
@@ -110,7 +126,7 @@ router.get('/search', validateCredentials, async (req, res) => {
                     image: imageUrl,
                     price: price,
                     url: product.url,
-                    hasAddToCart: true // Always include Add to Cart button
+                    hasAddToCart: true
                 };
             })
         };

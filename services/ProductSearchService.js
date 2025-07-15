@@ -126,7 +126,8 @@ class ProductSearchService {
                 locale,
                 pageNumber,
                 pageSize,
-                facets
+                facets,
+                searchRefinements
             } = searchParams;
 
             const apiUrl = `${this.baseURL}/products/${this.apiVersion}/products`;
@@ -140,8 +141,20 @@ class ProductSearchService {
                 facets: facets.join(',')
             };
 
-            console.log('API URL:', apiUrl);
-            console.log('Request params:', params);
+            // Add searchRefinements parameter if provided
+            if (searchRefinements && searchRefinements.trim()) {
+                params.searchRefinements = searchRefinements;
+                console.log('🎯 Including searchRefinements in Amazon API call:', searchRefinements);
+                console.log('📏 SearchRefinements parameter details:');
+                console.log('   - Raw value:', searchRefinements);
+                console.log('   - Length:', searchRefinements.length);
+                console.log('   - URL encoded:', encodeURIComponent(searchRefinements));
+            } else {
+                console.log('⚠️  No searchRefinements parameter to include in Amazon API call');
+            }
+
+            console.log('🌐 Amazon API URL:', apiUrl);
+            console.log('📋 Complete request parameters being sent to Amazon API:', JSON.stringify(params, null, 2));
 
             const response = await axios.get(apiUrl, {
                 params,
