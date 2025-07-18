@@ -126,7 +126,8 @@ router.get('/search', validateCredentials, async (req, res) => {
                     image: imageUrl,
                     price: price,
                     url: product.url,
-                    hasAddToCart: true
+                    hasAddToCart: true,
+                    supplierId: 'AmazonBusiness'
                 };
             })
         };
@@ -164,215 +165,6 @@ router.get('/search', validateCredentials, async (req, res) => {
     }
 });
 
-// Supplier1 mock data endpoint
-router.get('/supplier1', (req, res) => {
-    try {
-        console.log('Supplier1 mock data request received');
-        console.log('Query parameters:', req.query);
-
-        const {
-            pageNumber = 0,
-            pageSize = 24
-        } = req.query;
-
-        const mockProducts = [
-            {
-                asin: 'SUP001',
-                title: 'Premium Office Chair - Ergonomic Design with Lumbar Support',
-                image: 'https://via.placeholder.com/300x300/4CAF50/FFFFFF?text=Office+Chair',
-                price: {
-                    amount: 299.99,
-                    currency: 'USD',
-                    formatted: 'USD 299.99'
-                },
-                url: '#',
-                hasAddToCart: true
-            },
-            {
-                asin: 'SUP002',
-                title: 'Wireless Bluetooth Headphones - Noise Cancelling Technology',
-                image: 'https://via.placeholder.com/300x300/2196F3/FFFFFF?text=Headphones',
-                price: {
-                    amount: 149.99,
-                    currency: 'USD',
-                    formatted: 'USD 149.99'
-                },
-                url: '#',
-                hasAddToCart: true
-            },
-            {
-                asin: 'SUP003',
-                title: 'Smart LED Desk Lamp with USB Charging Port',
-                image: 'https://via.placeholder.com/300x300/FF9800/FFFFFF?text=Desk+Lamp',
-                price: {
-                    amount: 79.99,
-                    currency: 'USD',
-                    formatted: 'USD 79.99'
-                },
-                url: '#',
-                hasAddToCart: true
-            },
-            {
-                asin: 'SUP004',
-                title: 'Mechanical Gaming Keyboard - RGB Backlit Keys',
-                image: 'https://via.placeholder.com/300x300/9C27B0/FFFFFF?text=Keyboard',
-                price: {
-                    amount: 129.99,
-                    currency: 'USD',
-                    formatted: 'USD 129.99'
-                },
-                url: '#',
-                hasAddToCart: true
-            },
-            {
-                asin: 'SUP005',
-                title: 'Portable External Hard Drive - 2TB Storage Capacity',
-                image: 'https://via.placeholder.com/300x300/607D8B/FFFFFF?text=Hard+Drive',
-                price: {
-                    amount: 89.99,
-                    currency: 'USD',
-                    formatted: 'USD 89.99'
-                },
-                url: '#',
-                hasAddToCart: true
-            },
-            {
-                asin: 'SUP006',
-                title: 'Wireless Mouse - Precision Optical Sensor',
-                image: 'https://via.placeholder.com/300x300/795548/FFFFFF?text=Mouse',
-                price: {
-                    amount: 39.99,
-                    currency: 'USD',
-                    formatted: 'USD 39.99'
-                },
-                url: '#',
-                hasAddToCart: true
-            },
-            {
-                asin: 'SUP007',
-                title: 'Standing Desk Converter - Adjustable Height Workstation',
-                image: 'https://via.placeholder.com/300x300/FF5722/FFFFFF?text=Standing+Desk',
-                price: {
-                    amount: 199.99,
-                    currency: 'USD',
-                    formatted: 'USD 199.99'
-                },
-                url: '#',
-                hasAddToCart: true
-            },
-            {
-                asin: 'SUP008',
-                title: 'USB-C Hub - Multi-Port Adapter with HDMI Output',
-                image: 'https://via.placeholder.com/300x300/3F51B5/FFFFFF?text=USB+Hub',
-                price: {
-                    amount: 59.99,
-                    currency: 'USD',
-                    formatted: 'USD 59.99'
-                },
-                url: '#',
-                hasAddToCart: true
-            }
-        ];
-
-        const mockRefinements = [
-            {
-                selectionType: 'InsteadSelect',
-                displayValue: 'Category',
-                refinementValues: [
-                    {
-                        searchRefinementValue: 'electronics',
-                        displayName: 'Electronics',
-                        count: 15
-                    },
-                    {
-                        searchRefinementValue: 'office',
-                        displayName: 'Office Supplies',
-                        count: 12
-                    },
-                    {
-                        searchRefinementValue: 'furniture',
-                        displayName: 'Furniture',
-                        count: 8
-                    }
-                ]
-            },
-            {
-                selectionType: 'MultiSelectOR',
-                displayValue: 'Price Range',
-                refinementValues: [
-                    {
-                        searchRefinementValue: 'under50',
-                        displayName: 'Under $50',
-                        count: 5
-                    },
-                    {
-                        searchRefinementValue: '50to100',
-                        displayName: '$50 - $100',
-                        count: 8
-                    },
-                    {
-                        searchRefinementValue: '100to200',
-                        displayName: '$100 - $200',
-                        count: 10
-                    },
-                    {
-                        searchRefinementValue: 'over200',
-                        displayName: 'Over $200',
-                        count: 7
-                    }
-                ]
-            },
-            {
-                selectionType: 'SingleSelect',
-                displayValue: 'Brand',
-                refinementValues: [
-                    {
-                        searchRefinementValue: 'supplier1_premium',
-                        displayName: 'Supplier1 Premium'
-                    },
-                    {
-                        searchRefinementValue: 'supplier1_standard',
-                        displayName: 'Supplier1 Standard'
-                    },
-                    {
-                        searchRefinementValue: 'supplier1_budget',
-                        displayName: 'Supplier1 Budget'
-                    }
-                ]
-            }
-        ];
-
-        // Calculate pagination
-        const totalProducts = mockProducts.length;
-        const currentPage = parseInt(pageNumber);
-        const pageSizeInt = parseInt(pageSize);
-        const startIndex = currentPage * pageSizeInt;
-        const endIndex = startIndex + pageSizeInt;
-        const paginatedProducts = mockProducts.slice(startIndex, endIndex);
-        const numberOfPages = Math.ceil(totalProducts / pageSizeInt);
-
-        const response = {
-            totalResults: totalProducts,
-            numberOfPages: numberOfPages,
-            currentPage: currentPage,
-            pageSize: pageSizeInt,
-            searchRefinements: mockRefinements,
-            products: paginatedProducts
-        };
-
-        console.log(`Returning ${paginatedProducts.length} products for supplier1 (page ${currentPage + 1} of ${numberOfPages})`);
-        res.json(response);
-
-    } catch (error) {
-        console.error('Error in supplier1 endpoint:', error);
-        res.status(500).json({
-            error: {
-                message: 'Internal Server Error',
-                status: 500
-            }
-        });
-    }
-});
 
 // Get product details by ASIN
 router.get('/:asin', validateCredentials, async (req, res) => {
@@ -393,10 +185,221 @@ router.get('/:asin', validateCredentials, async (req, res) => {
         }, req.amazonHeaders);
 
         console.log(`Product details retrieved for ASIN: ${asin}`);
-        res.json(productDetails);
+
+        // Extract price and offerId from first offer
+        let price = null;
+        let offerId = null;
+        if (productDetails.includedDataTypes && productDetails.includedDataTypes.OFFERS && productDetails.includedDataTypes.OFFERS.length > 0) {
+            const firstOffer = productDetails.includedDataTypes.OFFERS[0];
+            offerId = firstOffer.offerId || null;
+            if (firstOffer.price && firstOffer.price.value) {
+                price = {
+                    amount: firstOffer.price.value.amount,
+                    currency: firstOffer.price.value.currencyCode,
+                    formatted: `${firstOffer.price.value.currencyCode} ${firstOffer.price.value.amount}`
+                };
+            }
+        }
+
+        // Extract image URL
+        let imageUrl = null;
+        if (productDetails.includedDataTypes && productDetails.includedDataTypes.IMAGES && productDetails.includedDataTypes.IMAGES.length > 0) {
+            const firstImage = productDetails.includedDataTypes.IMAGES[0];
+            if (firstImage.large && firstImage.large.url) {
+                imageUrl = firstImage.large.url;
+            } else if (firstImage.medium && firstImage.medium.url) {
+                imageUrl = firstImage.medium.url;
+            } else if (firstImage.small && firstImage.small.url) {
+                imageUrl = firstImage.small.url;
+            }
+        }
+
+        // Return only the requested fields
+        const response = {
+            asin: productDetails.asin,
+            features: productDetails.features || [],
+            title: productDetails.title,
+            description: productDetails.productDescription || '',
+            price: price,
+            image: imageUrl,
+            url: productDetails.url,
+            hasAddToCart: true,
+            offerId: offerId,
+            supplierId: 'AmazonBusiness'
+        };
+
+        console.log('Returning product details:', JSON.stringify(response, null, 2));
+        res.json(response);
 
     } catch (error) {
         console.error('Error getting product details:', error);
+        
+        if (error.response) {
+            const status = error.response.status || 500;
+            const message = error.response.data?.errors?.[0]?.message || error.message || 'API Error';
+            
+            console.error(`API Error - Status: ${status}, Message: ${message}`);
+            console.error('Request ID:', error.response.headers?.['x-amzn-requestid']);
+            
+            return res.status(status).json({
+                error: {
+                    message: message,
+                    status: status,
+                    requestId: error.response.headers?.['x-amzn-requestid']
+                }
+            });
+        }
+
+        res.status(500).json({
+            error: {
+                message: error.message || 'Internal Server Error',
+                status: 500
+            }
+        });
+    }
+});
+
+// Place order endpoint - Amazon Business Ordering API
+router.post('/place-order', validateCredentials, async (req, res) => {
+    try {
+        console.log('Place order request received');
+        console.log('Request body:', req.body);
+
+        const { asin, offerId } = req.body;
+
+        // Validate required parameters
+        if (!asin || !offerId) {
+            return res.status(400).json({
+                error: {
+                    message: 'Missing required parameters: asin and offerId are required',
+                    status: 400
+                }
+            });
+        }
+
+        // Get a fresh access token
+        const accessToken = await ProductSearchService.getValidAccessToken();
+
+        // Construct the place order request according to the Amazon Business Ordering API
+        const externalId = `${asin}-IntegrationAgent-${Date.now()}`;
+        
+        const placeOrderRequest = {
+            externalId: externalId,
+            lineItems: [
+                {
+                    externalId: "line-item-1",
+                    quantity: 1,
+                    attributes: [
+                        {
+                            attributeType: "SelectedProductReference",
+                            productReference: {
+                                productReferenceType: "ProductIdentifier",
+                                id: asin
+                            }
+                        },
+                        {
+                            buyingOptionReference: {
+                                buyingOptionReferenceType: "BuyingOptionIdentifier",
+                                id: offerId
+                            },
+                            attributeType: "SelectedBuyingOptionReference"
+                        }
+                    ],
+                    expectations: [
+                        {
+                            expectationType: "ExpectedUnitPrice",
+                            amount: {
+                                currencyCode: "USD",
+                                amount: 10000.00
+                            }
+                        },
+                        {
+                            expectationType: "ExpectedCharge",
+                            amount: {
+                                currencyCode: "USD",
+                                amount: 1000.00
+                            },
+                            source: "SUBTOTAL"
+                        },
+                        {
+                            expectationType: "ExpectedCharge",
+                            amount: {
+                                currencyCode: "USD",
+                                amount: 100.50
+                            },
+                            source: "TAX"
+                        },
+                        {
+                            expectationType: "ExpectedCharge",
+                            amount: {
+                                currencyCode: "USD",
+                                amount: 500.00
+                            },
+                            source: "SHIPPING"
+                        }
+                    ]
+                }
+            ],
+            attributes: [
+                {
+                    attributeType: "PurchaseOrderNumber",
+                    purchaseOrderNumber: "ExamplePurchaseOrderNumber"
+                },
+                {
+                    attributeType: "BuyerReference",
+                    userReference: {
+                        userReferenceType: "UserEmail",
+                        emailAddress: "saibhavy+USProd@amazon.com"
+                    }
+                },
+                {
+                    attributeType: "BuyingGroupReference",
+                    groupReference: {
+                        groupReferenceType: "GroupIdentity",
+                        identifier: "TestGroupforsaibhavy9980632074"
+                    }
+                },
+                {
+                    attributeType: "Region",
+                    region: "US"
+                },
+                {
+                    attributeType: "SelectedPaymentMethodReference",
+                    paymentMethodReference: {
+                        paymentMethodReferenceType: "StoredPaymentMethod"
+                    }
+                },
+                {
+                    attributeType: "ShippingAddress",
+                    address: {
+                        addressType: "PhysicalAddress",
+                        fullName: "Example User",
+                        phoneNumber: "1234567890",
+                        companyName: "Example Company",
+                        addressLine1: "123 Example St.",
+                        addressLine2: "456",
+                        city: "Seattle",
+                        stateOrRegion: "WA",
+                        postalCode: "98109",
+                        countryCode: "US"
+                    }
+                }
+            ],
+            expectations: []
+        };
+
+        console.log('Place order request payload:', JSON.stringify(placeOrderRequest, null, 2));
+
+        // Call the ProductSearchService to place the order
+        const orderResult = await ProductSearchService.placeOrder(placeOrderRequest, req.amazonHeaders);
+
+        console.log('Place order completed successfully');
+        console.log('Place order response:', JSON.stringify(orderResult, null, 2));
+
+        res.json(orderResult);
+
+    } catch (error) {
+        console.error('Error placing order:', error);
         
         if (error.response) {
             const status = error.response.status || 500;

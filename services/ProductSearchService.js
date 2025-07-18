@@ -321,6 +321,55 @@ class ProductSearchService {
             throw error;
         }
     }
+
+    /**
+     * Place order using the Amazon Business Ordering API
+     * @param {Object} placeOrderRequest - Order request payload
+     * @param {Object} headers - Amazon headers containing accessToken and userEmail
+     * @returns {Promise<Object>} - Order result
+     */
+    async placeOrder(placeOrderRequest, headers) {
+        try {
+            console.log('Placing order via Amazon Business Ordering API...');
+
+            // Get a fresh access token
+            const accessToken = await this.getValidAccessToken();
+
+            const apiUrl = `${this.baseURL}/ordering/2022-10-30/orders`;
+            
+            console.log('Ordering API URL:', apiUrl);
+            console.log('Order request payload:', JSON.stringify(placeOrderRequest, null, 2));
+
+            const response = await axios.post(apiUrl, placeOrderRequest, {
+                headers: {
+                    'x-amz-access-token': accessToken,
+                    'x-amz-user-email': headers.userEmail,
+                    'Content-Type': 'application/json',
+                    'User-Agent': 'ProductSearchApp/1.0'
+                },
+                timeout: 30000
+            });
+
+            console.log('Place order API Response Status:', response.status);
+            console.log('Request ID:', response.headers['x-amzn-requestid']);
+
+            return response.data;
+
+        } catch (error) {
+            console.error('Error in placeOrder:', error.message);
+            
+            if (error.response) {
+                console.error('API Error Response:', {
+                    status: error.response.status,
+                    statusText: error.response.statusText,
+                    data: error.response.data
+                });
+                console.error('Request ID:', error.response.headers?.['x-amzn-requestid']);
+            }
+
+            throw error;
+        }
+    }
 }
 
 module.exports = new ProductSearchService();
